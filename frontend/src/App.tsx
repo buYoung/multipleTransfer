@@ -1,5 +1,5 @@
-import {useState, useRef} from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import {useState} from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu.tsx";
 
@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
+import { Label } from "@radix-ui/react-context-menu";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
+import { CheckBold } from "@/components/icon/Check.tsx";
 // import {Greet} from "wailsjs/go/main/App";
 
 interface Host {
@@ -16,7 +20,14 @@ interface Host {
     sshKey: string;
 }
 
+interface File {
+    name: string;
+    size: string;
+    path: string;
+}
+
 function App() {
+    const [checkState, setCheckState] = useState(false);
     const [resultText, setResultText] = useState("Please enter your name below 👇");
     const [name, setName] = useState('');
     const updateName = (e: any) => setName(e.target.value);
@@ -46,6 +57,18 @@ function App() {
         { userId: "test", host: "192.168.0.2", port: "22", sshKey: "test" },
         { userId: "test", host: "192.168.0.2", port: "22", sshKey: "test" },
         { userId: "test", host: "192.168.0.2", port: "22", sshKey: "test" },
+    ]
+
+    const files: File[] = [
+        { name: "test1", size: "1MB", path: "C:/test1" },
+        { name: "test2", size: "2MB", path: "C:/test2" },
+        { name: "test3", size: "3MB", path: "C:/test3" },
+        { name: "test4", size: "4MB", path: "C:/test4" },
+        { name: "test5", size: "5MB", path: "C:/test5" },
+        { name: "test6", size: "6MB", path: "C:/test6" },
+        { name: "test7", size: "7MB", path: "C:/test7" },
+        { name: "test8", size: "8MB", path: "C:/test8" },
+        { name: "test9", size: "9MB", path: "C:/test9" },
     ]
 
     return (
@@ -143,7 +166,7 @@ function App() {
                             <div className="flex justify-between pb-3">
                                 <div className="flex items-center">
                                     <span className="pr-5 text-center">
-                                        서버 개수 : { data.length }
+                                        서버 개수 : { files.length }
                                     </span>
                                 </div>
                                 <Button>추가</Button>
@@ -151,42 +174,58 @@ function App() {
                             <ContextMenu>
                                 <ContextMenuTrigger>
                                     <ScrollArea className="h-72 w-full">
-                                        <Table>
-                                            <TableHeader>
-                                                <TableRow>
-                                                    <TableHead className="w-[5%] text-center">
-                                                        <Checkbox/>
-                                                    </TableHead>
-                                                    <TableHead className="w-[20%] text-center">UserId</TableHead>
-                                                    <TableHead className="w-[30%] text-center">Host</TableHead>
-                                                    <TableHead className="w-[10%] text-center">Port</TableHead>
-                                                    <TableHead className="w-[20%] text-center">sshKey</TableHead>
-                                                    <TableHead className="w-[15%] text-center">Action</TableHead>
-                                                </TableRow>
-                                            </TableHeader>
-                                            <TableBody>
-                                                {
-                                                    data.map((host, index) => {
-                                                        return (
-                                                            <TableRow key={index}>
-                                                                <TableCell className="text-center">
-                                                                    <Checkbox/>
-                                                                </TableCell>
-                                                                <TableCell className="font-medium text-center">{host.userId}</TableCell>
-                                                                <TableCell className="text-center">{host.host}</TableCell>
-                                                                <TableCell className="text-center">{host.port}</TableCell>
-                                                                <TableCell className="text-center">{host.sshKey}</TableCell>
-                                                                <TableCell className="flex justify-center items-center space-x-4 text-sm">
-                                                                    <Button>수정</Button>
-                                                                    <Separator orientation="vertical" className="h-6"/>
-                                                                    <Button className="bg-red-600 hover:bg-red-500">삭제</Button>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )
-                                                    })
-                                                }
-                                            </TableBody>
-                                        </Table>
+                                        <div className="flex flex-wrap gap-6 p-3">
+                                            {
+                                                files.map((file, index) => {
+                                                    return (
+                                                        <Card key={index} className="mb-3 flex-auto">
+                                                            <CardHeader>
+                                                                <CardTitle className="flex justify-between">
+                                                                    <div>
+                                                                        {file.name}
+                                                                    </div>
+                                                                    <div>
+                                                                        <button
+                                                                            className={ `w-10 h-10 flex items-center justify-center rounded-full p-1 transition-colors duration-150 ease-in-out ${
+                                                                                checkState ? 'bg-checkbox-checked text-checkbox-checked-text' : 'bg-checkbox-unchecked text-checkbox-unchecked-text'
+                                                                            }` }
+                                                                            onClick={ () => {
+                                                                                setCheckState(!checkState);
+                                                                            } }
+                                                                            aria-checked={ checkState }
+                                                                            role="checkbox"
+                                                                        >
+                                                                            { checkState ? <CheckBold /> : '' }
+                                                                        </button>
+                                                                    </div>
+                                                                </CardTitle>
+                                                            </CardHeader>
+                                                            <CardContent>
+                                                            <div className="w-full pb-7">
+                                                                    <Select>
+                                                                    <SelectTrigger>
+                                                                            <SelectValue placeholder="Theme" />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            <SelectItem value="light">Light</SelectItem>
+                                                                            <SelectItem value="dark">Dark</SelectItem>
+                                                                            <SelectItem value="system">System</SelectItem>
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                </div>
+                                                                <div className="flex justify-between items-center">
+                                                                    <span className="pr-3">파일 크기 : {file.size}</span>
+                                                                    <div className="flex space-x-4">
+                                                                        <Button>수정</Button>
+                                                                        <Button className="bg-red-600 hover:bg-red-500">삭제</Button>
+                                                                    </div>
+                                                                </div>
+                                                            </CardContent>
+                                                        </Card>
+                                                    )
+                                                })
+                                            }
+                                        </div>
                                     </ScrollArea>
                                 </ContextMenuTrigger>
                                 <ContextMenuContent

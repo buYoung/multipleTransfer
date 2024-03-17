@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const { black, white, gray, emerald, indigo, yellow } = require("tailwindcss/colors.js");
+module.exports                                        = {
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -50,6 +51,12 @@ module.exports = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        checkbox: {
+          checked: "hsl(120, 100%, 40%)",
+          "checked-text": "hsl(0, 0%, 100%)",
+          unchecked: "hsl(0, 0%, 95%)",
+          "unchecked-text": "rgba(0, 0, 0, 0.5)",
         },
       },
       borderRadius: {
